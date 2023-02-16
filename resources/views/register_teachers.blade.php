@@ -27,6 +27,34 @@
             <button type="submit">Register</button>
         </div>
     </form>
+
+
+    <br> <br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($teachers as $teacher)
+                <tr>
+                    <td>{{ $teacher->name }}</td>
+                    <td>{{ $teacher->email }}</td>
+                    <td>{{ $teacher->phone }}</td>
+                    <td>
+                        <a href="{{ route('edit.teacher', $teacher->id) }}">Edit</a>
+                    </td>
+                </tr>
+            @empty
+                <p>No Registrations</p>
+            @endforelse
+        </tbody>
+    </table>
 </body>
 
 </html>

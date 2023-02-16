@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,13 +45,39 @@ class RegisterUserTest extends TestCase
             'password_confirmation' => 'password'
         ];
 
-       
-      
 
         $postRequest = $this->post(route('register.teacher'), $data);
         $postRequest->assertValid();
-        // $postRequest->assertStatus(200);
         $postRequest->assertSessionHas('success');
         $postRequest->assertRedirect('/teachers');
+    }
+
+    public function test_that_users_can_visit_edit_page()
+    {
+        $dataToEdit = Teacher::factory()->create();
+        $getPage = $this->get(route('edit.teacher', $dataToEdit->id));
+        $getPage->assertStatus(200);
+        $viewData = $getPage->viewData('teacher');
+        $this->assertEquals($dataToEdit->name, $viewData->first()->name);
+     
+    }
+
+    public function test_that_users_can_update_profile()
+    {
+        $data = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'phone' => "08054421788",
+            'password' => 'newPassword1',
+            'password_confirmation' => 'newPassword1'
+        ];
+        $user = Teacher::factory()->create();
+        
+
+        $editRequest = $this->patch(route('update.teacher',  $user->id), $data);
+        $editRequest->assertValid();
+        $editRequest->assertStatus(302);
+        $editRequest->assertSessionHas('success');
+        $editRequest->assertRedirect(route('teachers'));
     }
 }
