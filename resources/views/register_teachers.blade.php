@@ -38,6 +38,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Edit</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +49,22 @@
                     <td>{{ $teacher->phone }}</td>
                     <td>
                         <a href="{{ route('edit.teacher', $teacher->id) }}">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{{ route('delete.teacher', $teacher->id) }}" 
+                            onclick="
+                              event.preventDefault();
+                              if(confirm('Are you sure you want to delete this??')){
+                                document.getElementById('delete-form-{{ $teacher->id }}').submit();
+                              }
+                               
+                                "
+                            >Delete</a>
+
+                        <form class="d-none" action="{{ route('delete.teacher', $teacher->id) }}" method="POST" id="delete-form-{{ $teacher->id }}">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     </td>
                 </tr>
             @empty

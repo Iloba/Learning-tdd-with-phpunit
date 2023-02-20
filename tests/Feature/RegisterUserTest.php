@@ -80,4 +80,14 @@ class RegisterUserTest extends TestCase
         $editRequest->assertSessionHas('success');
         $editRequest->assertRedirect(route('teachers'));
     }
+
+    public function test_that_teachers_can_be_deleted()
+    {
+       $teacher = Teacher::factory()->create();
+       $deleteRequest = $this->delete(route('delete.teacher', $teacher->id));
+       $deleteRequest->assertSessionHas('success', 'Delete Successful');
+       $deleteRequest->assertSessionDoesntHaveErrors();
+       $deleteRequest->assertStatus(302);
+       $deleteRequest->assertRedirect(route('teachers'));
+    }
 }

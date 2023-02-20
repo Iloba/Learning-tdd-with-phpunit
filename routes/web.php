@@ -80,3 +80,4 @@ Route::get('teachers', function () {
 Route::post('register-teacher', [TeacherController::class, 'store'])->name('register.teacher');
 Route::get('edit-teacher/{id}', [TeacherController::class, 'edit'])->name('edit.teacher');
 Route::patch('update-teacher/{id}', [TeacherController::class, 'update'])->name('update.teacher');
+Route::delete('delete-teacher/{id}', [TeacherController::class, 'deleteTeacher'])->name('delete.teacher');

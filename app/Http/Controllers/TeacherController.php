@@ -77,4 +77,18 @@ class TeacherController extends Controller
         $price = Product::select('price')->get()->count();
         return $price;
     }
+
+    public function deleteTeacher($id)
+    {
+       $teacher = Teacher::find($id);
+
+       if(!$teacher){
+        throw ValidationException::withMessages(['teacher' => 'Could not find teacher']);
+       }
+
+       $teacher->delete();
+       return redirect('/teachers')->with('success', 'Delete Successful');
+    }
+
+   
 }
