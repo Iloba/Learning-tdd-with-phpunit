@@ -38,8 +38,8 @@ class RegisterUserTest extends TestCase
         $getPage->assertStatus(200);
 
         $data = [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->email,
+            'name' => 'Joyce Meyers',
+            'email' => 'Musa@gmail.com',
             'phone' => 1,
             'password' => 'password',
             'password_confirmation' => 'password'
@@ -50,8 +50,21 @@ class RegisterUserTest extends TestCase
         $postRequest->assertValid();
         $postRequest->assertSessionHas('success');
         $postRequest->assertRedirect('/teachers');
+
+        // Assert That Database received an Entry
+        $this->assertDatabaseHas('teachers', [
+            'name' => 'Joyce Meyers',
+            'email' => 'Musa@gmail.com',
+            'phone' => 1,
+        ]);
+
+        // Assert that the entry was Actually the Last Entry that hit the database
+        $teacher = Teacher::orderBy('id', 'desc')->first();
+        $this->assertEquals('Joyce Meyers', $teacher->name);
+        $this->assertEquals('Musa@gmail.com', $teacher->email);
     }
 
+    //Correct way to test for editing
     public function test_that_users_can_visit_edit_page()
     {
         $dataToEdit = Teacher::factory()->create();
@@ -59,20 +72,20 @@ class RegisterUserTest extends TestCase
         $getPage->assertStatus(200);
         $viewData = $getPage->viewData('teacher');
         $this->assertEquals($dataToEdit->name, $viewData->first()->name);
-     
+        $this->assertEquals($dataToEdit->email, $viewData->first()->email);
     }
 
     public function test_that_users_can_update_profile()
     {
         $data = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+            'name' => 'Emeka Iloba',
+            'email' => 'emeka@gmail.com',
             'phone' => "08054421788",
             'password' => 'newPassword1',
             'password_confirmation' => 'newPassword1'
         ];
         $user = Teacher::factory()->create();
-        
+
 
         $editRequest = $this->patch(route('update.teacher',  $user->id), $data);
         $editRequest->assertValid();
@@ -83,11 +96,20 @@ class RegisterUserTest extends TestCase
 
     public function test_that_teachers_can_be_deleted()
     {
-       $teacher = Teacher::factory()->create();
-       $deleteRequest = $this->delete(route('delete.teacher', $teacher->id));
-       $deleteRequest->assertSessionHas('success', 'Delete Successful');
-       $deleteRequest->assertSessionDoesntHaveErrors();
-       $deleteRequest->assertStatus(302);
-       $deleteRequest->assertRedirect(route('teachers'));
+        $teacher = Teacher::factory()->create();
+
+        //Assert that Database has One record
+        $this->assertEquals(1, Teacher::count());
+
+        $deleteRequest = $this->delete(route('delete.teacher', $teacher->id));
+        $deleteRequest->assertSessionDoesntHaveErrors();
+        $deleteRequest->assertSessionHas('success', 'Delete Successful');
+        $deleteRequest->assertStatus(302);
+        $deleteRequest->assertRedirect(route('teachers'));
+
+        //Assert that the one Record has been Deleted
+        $this->assertEquals(0, Teacher::count());
+
+
     }
 }

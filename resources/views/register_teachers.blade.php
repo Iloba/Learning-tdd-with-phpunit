@@ -19,11 +19,11 @@
     <form action="{{ route('register.teacher') }}" method="POST">
         @csrf
         <div>
-            <input type="text" name="name" placeholder="name"><br>
-            <input type="email" name="email" placeholder="email"><br>
-            <input type="phone" name="phone" placeholder="phone"><br>
-            <input type="password" name="password" placeholder="password"><br>
-            <input type="password" name="password_confirmation" placeholder="password Confirmation"><br>
+            <input type="text" name="name" placeholder="name"><br> <br>
+            <input type="email" name="email" placeholder="email"><br> <br>
+            <input type="phone" name="phone" placeholder="phone"><br> <br>
+            <input type="password" name="password" placeholder="password"><br> <br>
+            <input type="password" name="password_confirmation" placeholder="password Confirmation"><br> <br>
             <button type="submit">Register</button>
         </div>
     </form>
